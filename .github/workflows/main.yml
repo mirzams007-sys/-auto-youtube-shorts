@@ -37,6 +37,3 @@ jobs:
         with:
           name: My-Short-Video
           path: yt_short.mp4
-```
-
----
