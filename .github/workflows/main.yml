@@ -1,9 +1,7 @@
-```yaml
+yaml
 name: Video_Generator
 on:
-  workflow_dispatch: # Button se chalane ke liye
-  schedule:
-    - cron: '0 10 * * *' # Rozana subah 10 baje (Pakistani waqt ke mutabiq takreeban 3 baje)
+  workflow_dispatch:
 
 jobs:
   build:
@@ -17,23 +15,23 @@ jobs:
         with:
           python-version: '3.9'
 
-      - name: Install Tools
+      - name: Install System Tools
         run: |
           sudo apt-get update
           sudo apt-get install -y ffmpeg imagemagick
-          # ImageMagick policy fix (zaroori hai)
           sudo sed -i 's/domain="path" rights="none" pattern="@\*"/domain="path" rights="read|write" pattern="@\*"/g' /etc/ImageMagick-6/policy.xml
 
-      - name: Install Libraries
-        run: pip install -r requirements.txt
+      - name: Install Python Packages
+        run: |
+          pip install google-generativeai edge-tts moviepy==1.0.3 requests
 
-      - name: Create Video
+      - name: Run Script
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: python main.py
 
-      - name: Upload Video as Result
+      - name: Save Video
         uses: actions/upload-artifact@v4
         with:
-          name: My-Short-Video
+          name: AI-Short-Video
           path: yt_short.mp4
